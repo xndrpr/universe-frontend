@@ -1,0 +1,18 @@
+.movieContainer {
+    padding-left: 10rem;
+    padding-right: 10rem;
+}
+
+@media (max-width: 810px) {
+    .movieContainer {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .seasons {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}

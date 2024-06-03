@@ -7,6 +7,7 @@ import "@vime/core/themes/default.css";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Pagination } from "@nextui-org/pagination";
 import { CircularProgress } from "@nextui-org/progress";
+import s from './Movie.module.css'
 
 export default function Movie({ id }: { id: number }) {
   const [movie, setMovie] = useState<any>(null);
@@ -48,7 +49,7 @@ export default function Movie({ id }: { id: number }) {
   };
 
   return (
-    <div className="px-20">
+    <div className={s.movieContainer}>
       <div>
         {loading ? (
           "Loading ..."
@@ -73,7 +74,7 @@ export default function Movie({ id }: { id: number }) {
               </div>
               <div className="flex gap-1">
                 <b>Genres:</b>
-                <div className="flex gap-1">
+                <div className="flex gap-1 flex-wrap">
                   {loading ? (
                     <CircularProgress aria-label="Loading..." />
                   ) : (
@@ -115,7 +116,7 @@ export default function Movie({ id }: { id: number }) {
           {playerInfo?.type === "series" ? (
             <div>
               <Tabs
-                className="max-w-screen-sm overflow-auto"
+                className={`${s.seasons} max-w-screen-sm overflow-auto flex flex-wrap`}
                 aria-label="Options"
                 selectedKey={selectedSeason}
                 onSelectionChange={setSelectedSeason}
@@ -127,7 +128,7 @@ export default function Movie({ id }: { id: number }) {
               </Tabs>
             </div>
           ) : null}
-          <Player playsinline ref={player} onVmPlaybackReady={onPlaybackReady}>
+          <Player className={s.player} playsinline ref={player} onVmPlaybackReady={onPlaybackReady}>
             <Hls
               version="latest"
               config={{}}

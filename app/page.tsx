@@ -31,7 +31,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <div className="px-10">
       <Navbar setMovies={setMovies} />
       <div className="grid gap-4 grid-cols-fluid">
         {movies.map((movie: any) => (
