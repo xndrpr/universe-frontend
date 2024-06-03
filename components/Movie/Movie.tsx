@@ -2,12 +2,16 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { Player, Hls, DefaultUi } from "@vime/react";
 import "@vime/core/themes/default.css";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Pagination } from "@nextui-org/pagination";
 import { CircularProgress } from "@nextui-org/progress";
-import s from './Movie.module.css'
+import s from "./Movie.module.css";
+
+import '@vidstack/react/player/styles/default/theme.css';
+import '@vidstack/react/player/styles/default/layouts/video.css';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
+import { defaultLayoutIcons, DefaultVideoLayout } from '@vidstack/react/player/layouts/default';
 
 export default function Movie({ id }: { id: number }) {
   const [movie, setMovie] = useState<any>(null);
@@ -35,18 +39,23 @@ export default function Movie({ id }: { id: number }) {
         `${process.env.NEXT_PUBLIC_API_URL}/movies/player/${id}`,
         { cache: "no-cache" }
       );
-      setPlayerInfo(await response.json());
+      const data = await response.json();
+      if (data.type === "series") {
+        const sortedData = data.data.map((season: any) => {
+          return {
+            ...season,
+            series: season.series.sort(
+              (a: any, b: any) => parseInt(a.seria, 10) - parseInt(b.seria, 10)
+            ),
+          };
+        });
+        setPlayerInfo({ ...data, data: sortedData });
+      } else {
+        setPlayerInfo(data);
+      }
     }
     getPlayer();
   }, [id]);
-
-  const player = useRef<HTMLVmPlayerElement>(null);
-
-  const onPlaybackReady = () => {
-    if (player.current) {
-      console.log("Player is ready");
-    }
-  };
 
   return (
     <div className={s.movieContainer}>
@@ -128,24 +137,15 @@ export default function Movie({ id }: { id: number }) {
               </Tabs>
             </div>
           ) : null}
-          <Player className={s.player} playsinline ref={player} onVmPlaybackReady={onPlaybackReady}>
-            <Hls
-              version="latest"
-              config={{}}
-              poster={movie?.backdrop?.url ?? movie?.poster?.previewUrl}
-            >
-              <source
-                data-src={
+          <MediaPlayer title={movie?.name} src={
                   playerInfo?.type === "movie"
                     ? playerInfo?.data
-                    : playerInfo?.data[selectedSeason]?.series[selectedEpisode]
+                    : playerInfo?.data[selectedSeason]?.series[selectedEpisode === 0 ? 0 : selectedEpisode - 1]
                         ?.url
-                }
-                type="application/x-mpegURL"
-              />
-            </Hls>
-            <DefaultUi />
-          </Player>
+                }>
+            <MediaProvider />
+            <DefaultVideoLayout icons={defaultLayoutIcons} />
+          </MediaPlayer>
 
           {playerInfo?.type === "series" ? (
             <Pagination
@@ -155,8 +155,9 @@ export default function Movie({ id }: { id: number }) {
               showControls
               page={selectedEpisode}
               onChange={setSelectedEpisode}
-              className=" flex flex-wrap"
+              className="flex flex-wrap max-w-min overflow-auto"
               variant="light"
+              size="sm"
             />
           ) : null}
         </div>

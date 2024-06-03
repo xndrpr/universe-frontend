@@ -39,11 +39,12 @@ export default function Home() {
             <Link href={`/movie/${movie.id}`}>
               <Image
                 unoptimized
-                className="w-full h-auto object-cover rounded-md transition hover:shadow-lg hover:opacity-75 cursor-pointer"
+                className="w-full object-cover rounded-md transition hover:shadow-lg hover:opacity-75 cursor-pointer"
                 alt="poster"
                 src={movie?.poster?.previewUrl || "/placeholder.png"}
                 width={200}
                 height={300}
+                style={{maxHeight: 250}}
               />
             </Link>
             <Link href={`/movie/${movie.id}`}>
