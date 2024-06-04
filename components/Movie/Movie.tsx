@@ -2,7 +2,6 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import "@vime/core/themes/default.css";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import { Pagination } from "@nextui-org/pagination";
 import { CircularProgress } from "@nextui-org/progress";

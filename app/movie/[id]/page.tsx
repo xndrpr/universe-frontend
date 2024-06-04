@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import "../../globals.css";
 
-export default function page({ params }: { params: any }) {
+export default function MoviePage({ params }: { params: any }) {
   const id = params.id;
   const [movies, setMovies] = useState([]);
 
